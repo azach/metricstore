@@ -5,6 +5,7 @@ const port = 3000;
 
 const getMetric = require('./lib/getMetric');
 const addMetric = require('./lib/addMetric');
+const cleanMetrics = require('./lib/cleanMetrics');
 
 app.use(bodyParser.json());
 
@@ -24,9 +25,9 @@ app.post('/metric/:key', function (req, res) {
   const { key } = req.params;
   let { value } = req.body;
 
-  value = typeof(value) === 'number' && value % 1 === 0 && value > 0 ? value : null;
+  isValidInt = !isNaN(value) && parseInt(Number(value)) == value && !isNaN(parseInt(value, 10));
 
-  if (value) {
+  if (isValidInt) {
     addMetric({ key, value })
       .then(() => { res.sendStatus(200); })
       .catch(() => { res.status(500).send({ error: 'Error adding metric' }); });
@@ -40,3 +41,4 @@ app.use((req, res) => {
 });
 
 app.listen(port, () => console.log(`Server started on port ${port}`))
+cleanMetrics.init();
