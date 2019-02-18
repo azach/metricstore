@@ -42,3 +42,5 @@ app.use((req, res) => {
 
 app.listen(port, () => console.log(`Server started on port ${port}`))
 cleanMetrics.init();
+
+module.exports = app
